@@ -1,0 +1,52 @@
+//
+//  LottieView.swift
+//  RadioApp
+//
+//  Created by Chris Herlemann on 2020-05-02.
+//  Copyright © 2020 Chris Herlemann. All rights reserved.
+//
+
+import SwiftUI
+import Lottie
+
+struct LottieView: UIViewRepresentable {
+   func makeCoordinator() -> Coordinator {
+      Coordinator(self)
+   }
+   
+   var name: String!
+   @Binding var play:Bool
+   
+   var animationView = AnimationView()
+   
+   class Coordinator: NSObject {
+      var parent: LottieView
+      
+      init(_ animationView: LottieView) {
+         self.parent = animationView
+         super.init()
+      }
+   }
+   
+   func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
+      let view = UIView()
+      
+      animationView.animation = Animation.named(name)
+      animationView.contentMode = .scaleAspectFit
+      animationView.loopMode = .loop
+      
+      animationView.translatesAutoresizingMaskIntoConstraints = false
+      view.addSubview(animationView)
+      
+      NSLayoutConstraint.activate([
+         animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
+         animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
+      ])
+      
+      return view
+   }
+   
+   func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<LottieView>) {
+      self.play ? animationView.play() : animationView.pause()
+   }
+}
